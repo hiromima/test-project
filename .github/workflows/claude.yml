@@ -23,5 +23,7 @@ jobs:
       - name: Run Claude Code
         uses: anthropics/claude-code-github-action@v1
         with:
-          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # サブスクリプション版の場合は subscription-token を使用
+          # API版の場合は anthropic-api-key を使用
+          subscription-token: ${{ secrets.CLAUDE_SUBSCRIPTION_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
