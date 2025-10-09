@@ -1,0 +1,21 @@
+name: Claude Code
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  claude-code:
+    if: contains(github.event.comment.body, '@claude')
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Claude Code
+        uses: docker://ghcr.io/anthropics/claude-code:latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          REPOSITORY: ${{ github.repository }}
