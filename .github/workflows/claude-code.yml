@@ -3,19 +3,15 @@ name: Claude Code
 on:
   issue_comment:
     types: [created]
+  issues:
+    types: [opened]
 
 jobs:
-  claude-code:
-    if: contains(github.event.comment.body, '@claude')
+  claude:
+    if: contains(github.event.comment.body, '@claude') || contains(github.event.issue.body, '@claude')
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Claude Code
-        uses: docker://ghcr.io/anthropics/claude-code:latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          COMMENT_BODY: ${{ github.event.comment.body }}
-          REPOSITORY: ${{ github.repository }}
+      - uses: anthropics/claude-code-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
