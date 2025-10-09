@@ -4,26 +4,22 @@ on:
   issue_comment:
     types: [created]
   issues:
-    types: [opened, edited]
+    types: [opened]
 
 jobs:
   claude:
-    if: |
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
-      (github.event_name == 'issues' && contains(github.event.issue.body, '@claude'))
+    if: contains(github.event.comment.body, '@claude') || contains(github.event.issue.body, '@claude')
     runs-on: ubuntu-latest
     permissions:
       issues: write
-      contents: read
+      contents: write
+      pull-requests: write
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run Claude Code
-        uses: anthropics/claude-code-github-action@v1
+      - name: Claude Code
+        uses: anthropics/anthropic-quickstarts@claude-code-v1
         with:
-          # サブスクリプション版の場合は subscription-token を使用
-          # API版の場合は anthropic-api-key を使用
-          subscription-token: ${{ secrets.CLAUDE_SUBSCRIPTION_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
