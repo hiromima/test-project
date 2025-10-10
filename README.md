@@ -70,6 +70,8 @@ miyabi --issue 2  # Phase 0 開始
 ## 📋 主要ドキュメント
 
 - [PROJECT_PLAN.md](PROJECT_PLAN.md) - プロジェクト全体計画
+- [AGENTS.md](AGENTS.md) - 自律的 AI Agent システム運用憲法 (v5.0)
+- [CLAUDE.md](CLAUDE.md) - Claude Code 実行ガイド
 - [docs/TASK_BACKLOG.md](docs/TASK_BACKLOG.md) - タスクバックログ（27 タスク）
 - [docs/PLANNING_SUMMARY.md](docs/PLANNING_SUMMARY.md) - プランニングサマリー
 - [docs/AGENT_ASSIGNMENT.md](docs/AGENT_ASSIGNMENT.md) - エージェントアサインメント
@@ -77,5 +79,17 @@ miyabi --issue 2  # Phase 0 開始
 
 ---
 
-**最終更新:** 2025-10-08
-**ステータス:** Phase 0 - 計画フェーズ
+## 🏛️ システムガバナンス
+
+本プロジェクトは、[AGENTS.md](AGENTS.md) で定義された自律性の三原則に基づいて運用されます:
+
+1. **客観性の原則** - データとルールに基づく判断
+2. **自己充足性の原則** - 人間の介入最小化
+3. **追跡可能性の原則** - GitHub 上での完全な記録
+
+詳細は [AGENTS.md](AGENTS.md) を参照してください。
+
+---
+
+**最終更新:** 2025-10-10
+**ステータス:** Phase 1 完了、自律化システム導入

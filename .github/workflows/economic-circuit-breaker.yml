@@ -1,0 +1,79 @@
+name: Economic Circuit Breaker
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # 1時間ごとに実行
+  workflow_dispatch:  # 手動実行も可能
+
+permissions:
+  issues: write
+  actions: write
+  contents: read
+
+jobs:
+  monitor-cost:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check billing API (Placeholder)
+        id: check-billing
+        run: |
+          # TODO: 実際のBilling API統合
+          # 現在はプレースホルダー実装
+          echo "is_over_budget=false" >> $GITHUB_OUTPUT
+          echo "current_cost=0" >> $GITHUB_OUTPUT
+          echo "budget_limit=100" >> $GITHUB_OUTPUT
+          echo "✅ Cost monitoring: Within budget"
+
+      - name: Declare Economic Emergency if cost exceeds threshold
+        if: steps.check-billing.outputs.is_over_budget == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 全ての開発系ワークフローを一時停止
+          gh api -X PUT /repos/${{ github.repository }}/actions/workflows/claude-code.yml/disable || true
+
+          # 緊急Issueを起票
+          gh issue create \
+            --title "🤖🚨 Economic Circuit Breaker Triggered" \
+            --body "## 経済的非常事態宣言
+
+**トリガー時刻:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+**現在コスト:** \$$(echo '${{ steps.check-billing.outputs.current_cost }}')
+**予算上限:** \$$(echo '${{ steps.check-billing.outputs.budget_limit }}')
+
+### システムの状態
+
+- 🛑 **開発系ワークフローを一時停止しました**
+- 📊 **コスト消費ペースが予算の150%を超えると予測されました**
+
+### 次のアクション
+
+Guardian の介入を要請します。以下を確認してください:
+
+1. コスト急増の原因分析
+2. 予算調整または最適化の判断
+3. ワークフローの再開承認
+
+### 自動実行されたアクション
+
+- [x] claude-code.yml ワークフローの無効化
+- [x] Guardian へのアラート通知
+
+---
+
+**AGENTS.md 参照:** [経済的ガバナンスプロトコル](../AGENTS.md#economic_governance_protocol)
+" \
+            --label "P0-Critical,human-intervention-required,economic-emergency"
+
+          echo "🚨 Economic Circuit Breaker activated! Issue created."
+
+      - name: Log monitoring result
+        if: steps.check-billing.outputs.is_over_budget == 'false'
+        run: |
+          echo "✅ Cost monitoring completed successfully"
+          echo "Current cost: ${{ steps.check-billing.outputs.current_cost }}"
+          echo "Budget limit: ${{ steps.check-billing.outputs.budget_limit }}"

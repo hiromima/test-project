@@ -1,0 +1,64 @@
+# Economic Governance Configuration
+# AGENTS.md Economic_Governance_Protocol に基づく予算設定
+
+project:
+  name: "ハイエンド電動自転車ブランドコンセプト策定"
+  phase: "Phase 1 - Development"
+
+budget:
+  # 月間予算上限（USD）
+  monthly_limit: 100
+
+  # 警告閾値（月間予算の%）
+  warning_threshold: 70
+
+  # サーキットブレーカー発動閾値（月間予算の%）
+  circuit_breaker_threshold: 150
+
+  # コスト種別の内訳
+  breakdown:
+    compute:
+      github_actions: 50
+      cloud_services: 20
+    ai_services:
+      claude_api: 20
+      other_apis: 10
+
+monitoring:
+  # 監視間隔（分）
+  check_interval: 60
+
+  # アラート送信先
+  alerts:
+    - type: github_issue
+      enabled: true
+      labels: ["P0-Critical", "economic-emergency"]
+
+    # 将来的な拡張
+    # - type: slack
+    #   webhook_url: ${SLACK_WEBHOOK_URL}
+    # - type: email
+    #   recipients: ["guardian@example.com"]
+
+actions:
+  on_warning:
+    - log_warning
+    - create_issue_notification
+
+  on_circuit_breaker:
+    - disable_development_workflows
+    - create_critical_issue
+    - request_guardian_intervention
+
+# 除外項目（予算計算から除外するリソース）
+exclusions:
+  - name: "security_scans"
+    reason: "セキュリティは予算制約を受けない"
+  - name: "incident_response"
+    reason: "インシデント対応は予算制約を受けない"
+
+# 履歴
+history:
+  created_at: "2025-10-10"
+  last_updated: "2025-10-10"
+  version: "1.0"
